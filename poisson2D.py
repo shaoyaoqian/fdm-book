@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 # Grid parameters
 width = 1.0
 height = 1.0
-Nx = 40 
+Nx = 40
 Ny = 40
-dx = width/Nx
-dy = width/Ny
+dx = width / Nx
+dy = height / Ny
 
 # Boundary conditions
 left, right, top, bottom = 0.0, 0.0, 0.0, 0.0
