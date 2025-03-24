@@ -71,6 +71,6 @@ for iteration in range(40000):
         error = np.linalg.norm(u_exact - uh) * np.sqrt(dx * dy * dz)
         print(f"Iteration {iteration}, Error: {error}")
 
-# 80 0.000045438817238030254
-# 40 0.00018179732240585148
 # 20 0.0007278627568370262
+# 40 0.00018179732240585148
+# 80 0.000045438817238030254

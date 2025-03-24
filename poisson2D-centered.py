@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 # Grid parameters
 width = 1.0
 height = 1.0
-Nx = 80
-Ny = 80
+Nx = 20
+Ny = 20
 dx = width / Nx
 dy = height / Ny
 
@@ -13,9 +13,9 @@ dy = height / Ny
 left, right, top, bottom = 0.0, 0.0, 0.0, 0.0
 
 # Initialize arrays
-uh = np.zeros((Nx+1, Ny+1))  # Solution array (including boundary points)
-source = np.zeros((Nx+1, Ny+1))  # Source term array
-u_exact = np.zeros((Nx+1, Ny+1))  # Exact solution array
+uh = np.zeros((Nx+2, Ny+2))  # Solution array (including boundary points)
+source = np.zeros((Nx+2, Ny+2))  # Source term array
+u_exact = np.zeros((Nx+2, Ny+2))  # Exact solution array
 
 # Apply boundary conditions
 uh[0, :] = left
@@ -32,8 +32,12 @@ def cal_source(x, y):
 
 # Gauss-Seidel solver for 2D grid
 def gauss_seidel_2d(uh, source, Nx, Ny, dx, dy):
-    for i in range(1, Nx):
-        for j in range(1, Ny):
+    uh[0, :] =  -uh[1, :] 
+    uh[-1, :] =  -uh[-2, :] 
+    uh[:, 0] =  -uh[:,1] 
+    uh[:, -1] =  -uh[:, -2]
+    for i in range(1, Nx+1):
+        for j in range(1, Ny+1):
             # Neighbors in the x and y direction
             uxp = uh[i+1, j]  # Right neighbor
             uxn = uh[i-1, j]  # Left neighbor
@@ -46,10 +50,10 @@ def gauss_seidel_2d(uh, source, Nx, Ny, dx, dy):
             uh[i, j] = (source[i, j] - b) / a
 
 # Fill exact solution and source terms
-for i in range(Nx+1):
-    for j in range(Ny+1):
-        x = i / Nx
-        y = j / Ny
+for i in range(0, Nx+2):
+    for j in range(0, Ny+2):
+        x = (i-0.5)*dx
+        y = (j-0.5)*dy
         u_exact[i, j] = cal_u_exact(x, y)
         source[i, j] = cal_source(x, y)
 
@@ -60,6 +64,6 @@ for iteration in range(40000):
     if iteration % 100 == 0:
         print(f"Iteration {iteration}, Error: {error}")
 
-# 20 0.0010293533822632462
-# 40 0.00025710023883735177
-# 80 6.426019170613917e-05
+# 20 0.0010306206870872002
+# 40 0.0002571398667124654
+# 80 6.426143026278472e-05
