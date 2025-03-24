@@ -16,7 +16,7 @@ dx = width/Nx
 left = 0.0
 right = 0.0
 
-uh, source, u_exact = np.zeros(Nx+1), np.zeros(Nx+1), np.zeros(Nx+1)
+uh, source, u_exact = np.zeros(Nx+2), np.zeros(Nx+2), np.zeros(Nx+2)
 
 uh[0] = left
 uh[-1] = right
@@ -38,7 +38,7 @@ def cal_source(x):
     return -np.pi*np.pi*np.sin(np.pi*x)
 
 def gauss_seidel(uh,source, Nx):
-    for i in range(1, Nx):
+    for i in range(1, Nx+1):
         uxp = uh[i+1]
         uxn = uh[i-1]
         b = (uxp+uxn)/dx/dx
@@ -46,17 +46,19 @@ def gauss_seidel(uh,source, Nx):
         uh[i] = (source[i] - b) / a
 
 
-for i in range(Nx+1):
-    u_exact[i] = cal_u_exact(i/Nx)
-    source[i] = cal_source(i/Nx)
+for i in range(0,Nx+2):
+    u_exact[i] = cal_u_exact((i-0.5)*dx)
+    source[i] = cal_source((i-0.5)*dx)
 
 for i in range(1000):
+    uh[0] = -uh[1]
+    uh[-1] = - uh[-2]
     gauss_seidel(uh,source, Nx)
     print(np.linalg.norm(u_exact-uh, ord=2)*np.sqrt(dx))
 
 # plotting
 plt.figure()
-x = np.linspace(0, width, Nx+1)
+x = np.linspace(0, width, Nx+2)
 plt.plot(x, uh, label=f'uh')
 plt.plot(x, u_exact, label=f'u_exact')
 plt.title('1D poisson')
